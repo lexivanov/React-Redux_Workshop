@@ -1,0 +1,42 @@
+.global-overlay,
+.modal-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.global-overlay {
+  background: rgba($color: #000000, $alpha: 0.5);
+}
+
+.modal-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-container {
+  background: #ffffff;
+  border: 1px solid #505050;
+  border-radius: 3px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #505050;
+    background: #d1d1d1;
+    max-width: 700px;
+}
+
+.modal-close {
+    margin-left: 15px;
+    cursor: pointer;;
+    color: #cf0000;
+    &:hover{
+        color: #a80000;
+    }
+}

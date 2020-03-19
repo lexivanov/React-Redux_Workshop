@@ -8,3 +8,9 @@ html, body, #root {
     align-items: center;
     justify-content: center;
 }
+
+.text-ellipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}

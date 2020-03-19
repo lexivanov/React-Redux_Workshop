@@ -2,6 +2,41 @@
   display: flex;
   flex-direction: column;
 
+  .products-table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+
+    .action-button {
+      outline: 0;
+      padding: 6px 8px;
+      height: 30px;
+      border-radius: 3px;
+      display: block;
+      font-weight: 400;
+      text-align: center;
+      white-space: nowrap;
+      color: #fff;
+      background-color: #01b301;
+      border: #01b301;
+      &:hover,
+      &:active {
+        background-color: #017e01;
+      } 
+    }
+
+    .search-form {
+      display: flex;
+    }
+
+    .search-input {
+      height: 30px;
+      outline: 0;
+      border: 1px solid #404040;
+    }
+  }
+
   .products-table-content {
     max-height: 500px;
     max-height: calc(100vh - 200px);

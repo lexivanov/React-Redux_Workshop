@@ -1,0 +1,1 @@
+export const selectLastModal = state => state.modals.list.length ? state.modals.list[state.modals.list.length - 1] : null ;

@@ -2,13 +2,46 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { ProductRow } from './Components/ProductRow/ProductRow';
+import { getProducts } from '../../../Store/Reducers/Products';
+import { Button, Input } from '../../Primitives';
+
+import { ProductTableContent } from './Components';
 
 import './ProductsTable.scss'
 
 class ProductsTableInternal extends Component {
     static propTypes = {
-        poructIds: PropTypes.arrayOf(PropTypes.string)
+        poructIds: PropTypes.arrayOf(PropTypes.string),
+        loadProducts: PropTypes.func
+    }
+
+    componentDidMount() {
+        this.props.loadProducts();
+    }
+
+    state = {
+        searchInput: ''
+    }
+
+    onChangeSearchInput = value => this.setState({ searchInput: value || '' });
+
+    tableControlsRenderer() {
+        return (
+            <div className='products-table-controls'>
+                <form
+                    className='search-form'
+                    onSubmit>
+                    <Input
+                        className='search-input'
+                        placeholder='Filter products by name'
+                        onChange={this.onChangeSearchInput}
+                        value={this.state.searchInput}
+                    />
+                    <Button className='action-button'>Search</Button>
+                </form>
+                <Button className='action-button'>Add</Button>
+            </div>
+        );
     }
 
     tableHeaderRenderer() {
@@ -30,17 +63,17 @@ class ProductsTableInternal extends Component {
     render() {
         return (
             <div className="products-table">
+                {this.tableControlsRenderer()}
                 {this.tableHeaderRenderer()}
-                {!!this.props.poructIds.length && <div className="products-table-content">
-                    {this.props.poructIds.map(x => (<ProductRow id={x} key={x} />))}
-                </div>}
+                <ProductTableContent filterString={this.state.searchInput} />
             </div>
         );
     }
 }
 
 export const ProductsTable = connect(
-    state => ({
-        poructIds: state.products.ids
+    null,
+    dispatch => ({
+        loadProducts: () => dispatch(getProducts())
     })
 )(ProductsTableInternal);

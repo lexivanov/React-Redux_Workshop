@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { Button } from '../../../../Primitives';
+import { showModalAction } from '../../../../../Store/Reducers/Modals';
 
 import './ProductRow.scss';
 
@@ -24,7 +25,7 @@ class ProductRowInternal extends Component {
                     <span className='price'>{price}</span>
                 </div>
                 <div className='row-item column-actions'>
-                    <Button className='action-button edit'>Edit</Button>
+                    <Button className='action-button edit' onClick={this.props.edit}>Edit</Button>
                     <Button className='action-button delete'>Delete</Button>
                 </div>
             </div>
@@ -35,5 +36,11 @@ class ProductRowInternal extends Component {
 export const ProductRow = connect(
     (state, props) => ({
         product: state.products.list.get(props.id)
+    }),
+    dispatch => ({
+        edit: () => dispatch(showModalAction({
+            title: "SOME TITLE",
+            element: <span>123</span>
+        }))
     })
 )(ProductRowInternal);
