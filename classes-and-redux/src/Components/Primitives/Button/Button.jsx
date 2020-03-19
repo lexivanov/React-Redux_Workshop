@@ -9,11 +9,13 @@ export const Button = props => {
     };
 
     return (
-        <Button
+        <button
             {...props}
             type={props.type || 'submit'}
             onClick={onClickInternal}
-        />
+        >
+            {props.children}
+        </button>
     );
 };
 

@@ -13,7 +13,9 @@ export const Input = props => {
             {...props}
             onBlur={onBlurInternal}
             onChange={onChangeInternal}
-        />
+        >
+            {props.children}
+        </input>
     );
 };
 

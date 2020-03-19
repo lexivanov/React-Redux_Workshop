@@ -2,14 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
-import { ProductsTable } from './App';
+import { App } from './App';
 import { store } from './Store';
 
 import './index.scss';
 
 ReactDOM.render(
     <Provider store={store}>
-        <ProductsTable />
+        <App />
     </Provider>,
     document.getElementById('root')
 );

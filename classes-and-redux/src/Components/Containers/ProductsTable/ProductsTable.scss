@@ -1,0 +1,44 @@
+.products-table {
+  display: flex;
+  flex-direction: column;
+
+  .products-table-content {
+    max-height: 500px;
+    max-height: calc(100vh - 200px);
+    overflow: overlay;
+    border-right: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+  }
+
+  .column-name {
+    width: 300px;
+  }
+
+  .column-price {
+    width: 200px;
+  }
+
+  .column-actions {
+    width: 250px;
+  }
+
+  .products-table-header {
+    display: flex;
+
+    .header-item {
+      border: 1px solid #000000;
+      border-right: 0;
+      height: 50px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &:last-child {
+        border-right: 1px solid #000000;
+      }
+
+      .header-item-title {
+        font-weight: bold;
+      }
+    }
+  }
+}
