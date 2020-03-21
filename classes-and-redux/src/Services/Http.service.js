@@ -38,7 +38,7 @@ export class HttpService {
             }
         );
         throwIfBadRequest(response);
-        await response.json();
+        return await response.json();
     }
 
     static delete = async (url) => {

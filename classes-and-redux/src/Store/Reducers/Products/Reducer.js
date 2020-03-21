@@ -2,7 +2,8 @@ import { productActionTypes } from "./ActionTypes";
 
 const initialState = {
     list: new Map(),
-    ids: []
+    ids: [],
+    filter: ''
 };
 
 const reducerMapping = {
@@ -43,6 +44,8 @@ const reducerMapping = {
             ids: state.ids.filter(x => x !== id)
         };
     },
+
+    [productActionTypes.applyFilter]: (state, filter) => ({ ...state, filter }),
 }
 
 export const products = (state = initialState, action) => reducerMapping[action.type] ? reducerMapping[action.type](state, action.payload) : state;

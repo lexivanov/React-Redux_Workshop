@@ -1,0 +1,71 @@
+.edit-product-form {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+
+  .edit-product-form-group {
+    padding-top: 15px;
+    &:first-child {
+      padding-top: 0;
+    }
+  }
+
+  .edit-product-form-submit {
+    outline: 0;
+    margin-top: 20px;
+    padding: 6px 8px;
+    height: 30px;
+    width: 80px;
+    border-radius: 3px;
+    display: block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    color: #fff;
+    background-color: #01b301;
+    border: #01b301;
+    &:hover,
+    &:active {
+      background-color: #017e01;
+    }
+  }
+
+  .edit-product-form-delivery {
+    display: flex;
+    width: 300px;
+    height: 90px;
+    margin-top: 20px;
+    .edit-product-form-selector {
+      margin-right: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
+    .edit-product-form-country,
+    .edit-product-form-city {
+      display: flex;
+      flex-direction: column;
+      overflow: auto;
+      border: 1px solid #404040;
+      width: 150px;
+    }
+
+    .form-city-label,
+    .form-country-label {
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      width: 130px;
+      cursor: pointer;
+      &.all {
+        border-bottom: 1px solid #bdbdbd;
+      }
+    }
+
+    .form-city-name,
+    .form-country-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}

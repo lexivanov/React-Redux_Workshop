@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 export const Button = props => {
     const onClickInternal = e => {
         e.stopPropagation();
-        e.preventDefault();
         props.onClick && props.onClick();
     };
 

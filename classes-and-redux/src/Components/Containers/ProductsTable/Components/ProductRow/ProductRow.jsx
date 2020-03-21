@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 
 import { Button } from '../../../../Primitives';
 import { showModalAction } from '../../../../../Store/Reducers/Modals';
+import { dollarsPresenter } from '../../../../../Utils';
 
 import './ProductRow.scss';
+import { AddOrEditModal } from '../../../../Forms';
 
 class ProductRowInternal extends Component {
     static propTypes = {
@@ -22,10 +24,10 @@ class ProductRowInternal extends Component {
                     <span className='count'>{count}</span>
                 </div>
                 <div className='row-item column-price'>
-                    <span className='price'>{price}</span>
+                    <span className='price'>{dollarsPresenter(price)}</span>
                 </div>
                 <div className='row-item column-actions'>
-                    <Button className='action-button edit' onClick={this.props.edit}>Edit</Button>
+                    <Button className='action-button edit' onClick={() => this.props.edit(this.props.product)}>Edit</Button>
                     <Button className='action-button delete'>Delete</Button>
                 </div>
             </div>
@@ -38,9 +40,8 @@ export const ProductRow = connect(
         product: state.products.list.get(props.id)
     }),
     dispatch => ({
-        edit: () => dispatch(showModalAction({
-            title: "SOME TITLE",
-            element: <span>123</span>
+        edit: product => dispatch(showModalAction({
+            element: <AddOrEditModal product={product} />
         }))
     })
 )(ProductRowInternal);

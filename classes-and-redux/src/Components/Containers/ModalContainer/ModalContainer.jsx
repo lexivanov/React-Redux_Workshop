@@ -22,7 +22,7 @@ class ModalContainerInternal extends Component {
             <div className='modal-wrapper'>
                 <div className='modal-container'>
                     <div className='modal-header'>
-                        <span className="modal-title text-ellipsis">{this.props.modalData.title}</span>
+                        <span className="modal-title text-ellipsis">{this.props.modalData.title || ''}</span>
                         <span className="modal-close" onClick={this.props.closeModal}>X</span>
                     </div>
                     <div className='modal-content'>{this.props.modalData.element}</div>

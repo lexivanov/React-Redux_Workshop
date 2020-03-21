@@ -1,6 +1,6 @@
-import { urlBuilder } from "../Utils";
+import { urlBuilder } from '../Utils';
 
-import { HttpService } from "./Http.service";
+import { HttpService } from './Http.service';
 
 const apiPrefix = `https://api-crud-mongo.herokuapp.com/api/v1`;
 
@@ -22,7 +22,7 @@ export class ProductsDataService {
     }
 
     static async addOrEdit (product) {
-        const result = product.id != null
+        const result = !product.id
             ? await HttpService.post(productUrls.add, product)
             : await HttpService.put(urlBuilder(productUrls.edit, { productId: product.id }), product);
         
@@ -33,5 +33,14 @@ export class ProductsDataService {
         const result = await HttpService.delete(urlBuilder(productUrls.delete, { productId }));
         
         return result.Data;
+    }
+
+    static deliverySetup = {
+        countries: ['USA', 'Russia', 'Japan'],
+        cities: {
+            'USA':    ['Washington', 'Detroit', 'New York'],
+            'Russia': ['Moskow', 'St. Petersburg', 'Saratov'],
+            'Japan':  ['Tokyo', 'Yokohama', 'Osaka']
+        }
     }
 }
