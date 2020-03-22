@@ -3,36 +3,41 @@ import { ProductsDataService } from "../../../Services/ProductsData.service"
 import { productActionTypes } from "./ActionTypes"
 
 export const getProducts = () => {
-    return dispatch => {
-        ProductsDataService.get()
-            .then(x => dispatch(getProductsAction(x)));
+    return async dispatch => {
+        const products = await ProductsDataService.get();
+        dispatch(getProductsAction(products));
     };
 };
 
 export const addProduct = product => {
-    return dispatch => {
-        ProductsDataService.addOrEdit(product)
-            .then(x => dispatch(addProductAction({ ...product, id: x.id })));
+    return async dispatch => {
+        const newProduct = await ProductsDataService.addOrEdit(product);
+        dispatch(addProductAction({ ...product, id: newProduct.id }));
     };
 };
 
 export const editProduct = product => {
-    return dispatch => {
-        ProductsDataService.addOrEdit(product)
-            .then(x => dispatch(editProductAction(product)));
+    return async dispatch => {
+        await ProductsDataService.addOrEdit(product);
+        dispatch(editProductAction(product));
     };
 };
 
 export const deleteProduct = id => {
-    return dispatch => {
-        ProductsDataService.addOrEdit(id)
-            .then(x => dispatch(deleteProductAction(id)));
+    return async dispatch => {
+        await ProductsDataService.delete(id);
+        dispatch(deleteProductAction(id));
     };
 };
 
 export const applyFilter = filter => ({
     type: productActionTypes.applyFilter,
     payload: filter
+});
+
+export const applySorting = sortOptions => ({
+    type: productActionTypes.applySorting,
+    payload: sortOptions
 });
 
 const getProductsAction = products => ({

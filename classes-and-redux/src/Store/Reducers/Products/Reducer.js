@@ -3,7 +3,11 @@ import { productActionTypes } from "./ActionTypes";
 const initialState = {
     list: new Map(),
     ids: [],
-    filter: ''
+    filter: '',
+    sortOptions: {
+        field: "name",
+        isDesc: false
+    }
 };
 
 const reducerMapping = {
@@ -46,6 +50,8 @@ const reducerMapping = {
     },
 
     [productActionTypes.applyFilter]: (state, filter) => ({ ...state, filter }),
+
+    [productActionTypes.applySorting]: (state, sortOptions) => ({ ...state, sortOptions }),
 }
 
 export const products = (state = initialState, action) => reducerMapping[action.type] ? reducerMapping[action.type](state, action.payload) : state;

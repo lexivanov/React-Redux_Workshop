@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { Button } from '../../../../Primitives';
-import { showModalAction } from '../../../../../Store/Reducers/Modals';
+import { showModalAction, hideModalAction } from '../../../../../Store/Reducers/Modals';
+import { deleteProduct } from '../../../../../Store/Reducers/Products';
 import { dollarsPresenter } from '../../../../../Utils';
+import { AddOrEditModal, ConfirmModal } from '../../../../Forms';
 
 import './ProductRow.scss';
-import { AddOrEditModal } from '../../../../Forms';
 
 class ProductRowInternal extends Component {
     static propTypes = {
@@ -28,7 +29,7 @@ class ProductRowInternal extends Component {
                 </div>
                 <div className='row-item column-actions'>
                     <Button className='action-button edit' onClick={() => this.props.edit(this.props.product)}>Edit</Button>
-                    <Button className='action-button delete'>Delete</Button>
+                    <Button className='action-button delete' onClick={() => this.props.delete(this.props.product)}>Delete</Button>
                 </div>
             </div>
         );
@@ -42,6 +43,17 @@ export const ProductRow = connect(
     dispatch => ({
         edit: product => dispatch(showModalAction({
             element: <AddOrEditModal product={product} />
+        })),
+        delete: product => dispatch(showModalAction({
+            element: <ConfirmModal
+                title={`Delete ${product.name}`}
+                question='Are you sure you want to delete this product?'
+                onConfirm={async () => {
+                    await dispatch(deleteProduct(product.id));
+                    dispatch(hideModalAction());
+                }}
+                onReject={() => dispatch(hideModalAction())}
+            />
         }))
     })
 )(ProductRowInternal);

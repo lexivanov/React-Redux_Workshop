@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { getProducts, filterProductIds, applyFilter } from '../../../Store/Reducers/Products';
+import { getProducts, filterProductIds, applyFilter, applySorting } from '../../../Store/Reducers/Products';
 import { showModalAction } from '../../../Store/Reducers/Modals';
 import { Button, Input } from '../../Primitives';
 import { AddOrEditModal } from '../../Forms';
@@ -14,6 +14,7 @@ import './ProductsTable.scss'
 class ProductsTableInternal extends Component {
     static propTypes = {
         poructIds: PropTypes.arrayOf(PropTypes.string),
+        sortOptions: PropTypes.object,
         loadProducts: PropTypes.func,
         applyFilter: PropTypes.func
     }
@@ -31,6 +32,15 @@ class ProductsTableInternal extends Component {
     onSubmitSearch = e => {
         e.preventDefault();
         this.props.applyFilter(this.state.searchInput);
+    }
+
+    onSortClickFactory = fieldName => e => {
+        const options = this.props.sortOptions;
+
+        this.props.applySorting({
+            field: fieldName,
+            isDesc: options.field === fieldName && !options.isDesc
+        })
     }
 
     tableControlsRenderer() {
@@ -58,14 +68,23 @@ class ProductsTableInternal extends Component {
         );
     }
 
+
+
     tableHeaderRenderer() {
+        const options = this.props.sortOptions;
         return (
             <div className='products-table-header'>
-                <div className='header-item column-name'>
+                <div className='header-item column-name' >
                     <span className='header-item-title'>Name</span>
+                    <span className='sort-button' onClick={this.onSortClickFactory('name')}>
+                        {options.field === 'name' && options.isDesc ? '🔺' : '🔻'}
+                    </span>
                 </div>
-                <div className='header-item column-price'>
+                <div className='header-item column-price' >
                     <span className='header-item-title'>Price</span>
+                    <span className='sort-button' onClick={this.onSortClickFactory('price')}>
+                        {options.field === 'price' && options.isDesc ? '🔺' : '🔻'}
+                    </span>
                 </div>
                 <div className='header-item column-actions'>
                     <span className='header-item-title'>Actions</span>
@@ -89,11 +108,13 @@ class ProductsTableInternal extends Component {
 
 export const ProductsTable = connect(
     (state, props) => ({
-        poructIds: filterProductIds(state, props.filterString)
+        poructIds: filterProductIds(state, props.filterString),
+        sortOptions: state.products.sortOptions
     }),
     dispatch => ({
         loadProducts: () => dispatch(getProducts()),
         applyFilter: filter => dispatch(applyFilter(filter)),
+        applySorting: options => dispatch(applySorting(options)),
         add: () => dispatch(showModalAction({
             element: <AddOrEditModal />
         }))

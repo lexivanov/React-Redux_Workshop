@@ -7,9 +7,9 @@ import { Input, Button } from '../../Primitives';
 import { ProductsDataService } from '../../../Services/ProductsData.service';
 
 import { addProduct, editProduct } from '../../../Store/Reducers/Products';
+import { hideModalAction } from '../../../Store/Reducers/Modals';
 
 import './EditProductModal.scss';
-import { hideModalAction } from '../../../Store/Reducers/Modals';
 
 const emptyDelivery = {
     country: null,
@@ -32,7 +32,8 @@ export class AddOrEditModalInternal extends Component {
     state = {
         product: this.props.product ? deepClone(this.props.product) : emptyProduct,
         deliveryMode: this.props.product && this.props.product.delivery.city && this.props.product.delivery.city.length ? 'city' : '',
-        presentAsDollar: true
+        presentAsDollar: true,
+        inProcess: false
     };
 
     onChangeStringFieldFactory = fieldName => value => this.setState({ product: { ...this.state.product, [fieldName]: value } });
@@ -107,12 +108,14 @@ export class AddOrEditModalInternal extends Component {
         e.preventDefault();
         const product = { ...this.state.product };
         product.delivery.city && !product.delivery.city.length && (product.delivery.city = null)
-        if (this.state.product.id) {
-            await this.props.editProduct(product);
-        } else {
-            await this.props.addProduct(product);
-        }
 
+        this.setState({ inProcess: true });
+        
+        this.state.product.id
+            ? await this.props.editProduct(product)
+            : await this.props.addProduct(product);
+
+        this.setState({ inProcess: false });
         this.props.close();
     };
 
@@ -143,7 +146,7 @@ export class AddOrEditModalInternal extends Component {
 
     citySelectorRenderer = cities => {
         const { delivery } = this.state.product;
-        const allChecked = delivery.city && delivery.city.length === cities.length;
+        const allChecked = cities && delivery.city && delivery.city.length === cities.length;
 
         return (
             <div className='edit-product-form-city'>
@@ -256,8 +259,8 @@ export class AddOrEditModalInternal extends Component {
 export const AddOrEditModal = connect(
     null,
     dispatch => ({
-        addProduct: async product => await dispatch(addProduct(product)),
-        editProduct: async product => await dispatch(editProduct(product)),
+        addProduct: product => dispatch(addProduct(product)),
+        editProduct: product => dispatch(editProduct(product)),
         close: () => dispatch(hideModalAction()),
     })
 )(AddOrEditModalInternal);
