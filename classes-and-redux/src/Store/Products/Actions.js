@@ -1,4 +1,4 @@
-import { ProductsDataService } from "../../../Services/ProductsData.service"
+import { ProductsDataService } from "../../Services/ProductsData.service"
 
 import { productActionTypes } from "./ActionTypes"
 

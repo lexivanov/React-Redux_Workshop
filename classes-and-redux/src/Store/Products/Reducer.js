@@ -1,7 +1,7 @@
 import { productActionTypes } from "./ActionTypes";
 
 const initialState = {
-    list: new Map(),
+    list: Object.create(null),
     ids: [],
     filter: '',
     sortOptions: {
@@ -12,8 +12,8 @@ const initialState = {
 
 const reducerMapping = {
     [productActionTypes.getAll]: (state, products) => {
-        const list = new Map();
-        products.forEach(prod => list.set(prod.id, prod));
+        const list = Object.create(null);
+        products.forEach(prod => list[prod.id] = prod);
 
         return {
             ...state,
@@ -23,8 +23,8 @@ const reducerMapping = {
     },
 
     [productActionTypes.add]: (state, product) => {
-        const list = new Map(state.list);
-        list.set(product.id, product);
+        const list = { ...state.list };
+        list[product.id] = product;
 
         return {
             ...state,
@@ -34,14 +34,14 @@ const reducerMapping = {
     },
 
     [productActionTypes.edit]: (state, product) => {
-        const list = new Map(state.list);
-        list.set(product.id, product);
+        const list = { ...state.list };
+        list[product.id] = product;
         return { ...state, list };
     },
 
     [productActionTypes.delete]: (state, id) => {
-        const list = new Map(state.list);
-        list.delete(id);
+        const list = { ...state.list };
+        list[id] = undefined;
         return {
             ...state,
             list,

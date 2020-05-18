@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { selectLastModal, hideModalAction } from '../../../Store/Reducers/Modals';
+import { hideModalActionCreator, selectLastModal } from '../../../Store/Modals';
 
 import './ModalContainer.scss';
 
@@ -43,7 +43,7 @@ export const ModalContainer = connect(
     state => ({
         modalData: selectLastModal(state)
     }),
-    dispatch => ({
-        closeModal: () => dispatch(hideModalAction())
-    })
+    {
+        closeModal: hideModalActionCreator
+    }
 )(ModalContainerInternal);

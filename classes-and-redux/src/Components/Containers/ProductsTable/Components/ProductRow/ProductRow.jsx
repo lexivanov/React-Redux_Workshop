@@ -3,10 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { Button } from '../../../../Primitives';
-import { showModalAction, hideModalAction } from '../../../../../Store/Reducers/Modals';
-import { deleteProduct } from '../../../../../Store/Reducers/Products';
+import { showArrOrEditModal, showDeleteConfirmModal } from '../../../../../Store/Modals';
 import { dollarsPresenter } from '../../../../../Utils';
-import { AddOrEditModal, ConfirmModal } from '../../../../Forms';
 
 import './ProductRow.scss';
 
@@ -15,6 +13,10 @@ class ProductRowInternal extends Component {
         id: PropTypes.string,
         product: PropTypes.object
     }
+
+    edit = () => this.props.edit(this.props.product);
+
+    delete = () => this.props.delete(this.props.product);
 
     render() {
         const { name, price, count } = this.props.product;
@@ -28,8 +30,8 @@ class ProductRowInternal extends Component {
                     <span className='price'>{dollarsPresenter(price)}</span>
                 </div>
                 <div className='row-item column-actions'>
-                    <Button className='action-button edit' onClick={() => this.props.edit(this.props.product)}>Edit</Button>
-                    <Button className='action-button delete' onClick={() => this.props.delete(this.props.product)}>Delete</Button>
+                    <Button className='action-button edit' onClick={this.edit}>Edit</Button>
+                    <Button className='action-button delete' onClick={this.delete}>Delete</Button>
                 </div>
             </div>
         );
@@ -38,22 +40,10 @@ class ProductRowInternal extends Component {
 
 export const ProductRow = connect(
     (state, props) => ({
-        product: state.products.list.get(props.id)
+        product: state.products.list[props.id]
     }),
-    dispatch => ({
-        edit: product => dispatch(showModalAction({
-            element: <AddOrEditModal product={product} />
-        })),
-        delete: product => dispatch(showModalAction({
-            element: <ConfirmModal
-                title={`Delete ${product.name}`}
-                question='Are you sure you want to delete this product?'
-                onConfirm={async () => {
-                    await dispatch(deleteProduct(product.id));
-                    dispatch(hideModalAction());
-                }}
-                onReject={() => dispatch(hideModalAction())}
-            />
-        }))
-    })
+    {
+        edit: showArrOrEditModal,
+        delete: showDeleteConfirmModal
+    }
 )(ProductRowInternal);

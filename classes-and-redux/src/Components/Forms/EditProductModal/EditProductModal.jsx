@@ -6,23 +6,11 @@ import { deepClone, dollarsPresenter } from '../../../Utils';
 import { Input, Button } from '../../Primitives';
 import { ProductsDataService } from '../../../Services/ProductsData.service';
 
-import { addProduct, editProduct } from '../../../Store/Reducers/Products';
-import { hideModalAction } from '../../../Store/Reducers/Modals';
+import { addProduct, editProduct } from '../../../Store/Products';
+import { hideModalActionCreator } from '../../../Store/Modals';
+import { emptyDelivery, emptyProduct, deliveryModes } from './Constants';
 
 import './EditProductModal.scss';
-
-const emptyDelivery = {
-    country: null,
-    city: []
-};
-
-const emptyProduct = {
-    name: '',
-    email: '',
-    count: '',
-    price: '',
-    delivery: emptyDelivery
-}
 
 export class AddOrEditModalInternal extends Component {
     static propTypes = {
@@ -31,7 +19,9 @@ export class AddOrEditModalInternal extends Component {
 
     state = {
         product: this.props.product ? deepClone(this.props.product) : emptyProduct,
-        deliveryMode: this.props.product && this.props.product.delivery.city && this.props.product.delivery.city.length ? 'city' : '',
+        deliveryMode: this.props.product && this.props.product.delivery.city && this.props.product.delivery.city.length
+            ? deliveryModes.city
+            : deliveryModes.none,
         presentAsDollar: true,
         inProcess: false
     };
@@ -110,7 +100,7 @@ export class AddOrEditModalInternal extends Component {
         product.delivery.city && !product.delivery.city.length && (product.delivery.city = null)
 
         this.setState({ inProcess: true });
-        
+
         this.state.product.id
             ? await this.props.editProduct(product)
             : await this.props.addProduct(product);
@@ -193,12 +183,12 @@ export class AddOrEditModalInternal extends Component {
                     value={mode}
                     onChange={this.onChangeDeliveryMode}
                 >
-                    <option value={''}>None</option>
-                    <option value='country'>Country</option>
-                    {delivery.country && <option value='city'>City</option>}
+                    <option value={deliveryModes.none}>None</option>
+                    <option value={deliveryModes.country}>Country</option>
+                    {delivery.country && <option value={deliveryModes.city}>City</option>}
                 </select>
-                {mode === 'country' && this.countrySelectorRenderer(deliverySetup.countries)}
-                {mode === 'city' && this.citySelectorRenderer(deliverySetup.cities[delivery.country])}
+                {mode === deliveryModes.country && this.countrySelectorRenderer(deliverySetup.countries)}
+                {mode === deliveryModes.city && this.citySelectorRenderer(deliverySetup.cities[delivery.country])}
             </div>
         )
     }
@@ -258,9 +248,9 @@ export class AddOrEditModalInternal extends Component {
 
 export const AddOrEditModal = connect(
     null,
-    dispatch => ({
-        addProduct: product => dispatch(addProduct(product)),
-        editProduct: product => dispatch(editProduct(product)),
-        close: () => dispatch(hideModalAction()),
-    })
+    {
+        addProduct,
+        editProduct,
+        close: hideModalActionCreator,
+    }
 )(AddOrEditModalInternal);

@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { getProducts, filterProductIds, applyFilter, applySorting } from '../../../Store/Reducers/Products';
-import { showModalAction } from '../../../Store/Reducers/Modals';
+import { getProducts, filterProductIds, applyFilter, applySorting } from '../../../Store/Products';
+import { showArrOrEditModal } from '../../../Store/Modals';
 import { Button, Input } from '../../Primitives';
-import { AddOrEditModal } from '../../Forms';
 
 import { ProductRow } from './Components';
 
@@ -13,7 +12,7 @@ import './ProductsTable.scss'
 
 class ProductsTableInternal extends Component {
     static propTypes = {
-        poructIds: PropTypes.arrayOf(PropTypes.string),
+        productIds: PropTypes.arrayOf(PropTypes.string),
         sortOptions: PropTypes.object,
         loadProducts: PropTypes.func,
         applyFilter: PropTypes.func
@@ -68,8 +67,6 @@ class ProductsTableInternal extends Component {
         );
     }
 
-
-
     tableHeaderRenderer() {
         const options = this.props.sortOptions;
         return (
@@ -98,25 +95,27 @@ class ProductsTableInternal extends Component {
             <div className="products-table">
                 {this.tableControlsRenderer()}
                 {this.tableHeaderRenderer()}
-                {!!this.props.poructIds.length && <div className="products-table-content">
-                    {this.props.poructIds.map(x => (<ProductRow id={x} key={x} />))}
+                {!!this.props.productIds.length && <div className="products-table-content">
+                    {this.props.productIds.map(x => (<ProductRow id={x} key={x} />))}
                 </div>}
             </div>
         );
     }
 }
 
+const mapStateToProps = (state, ownProps) => ({
+    productIds: filterProductIds(state, ownProps.filterString),
+    sortOptions: state.products.sortOptions
+});
+
+const mapDispatchToProps = dispatch => ({
+    loadProducts: () => dispatch(getProducts()),
+    applyFilter: filter => dispatch(applyFilter(filter)),
+    applySorting: options => dispatch(applySorting(options)),
+    add: () => dispatch(showArrOrEditModal())
+});
+
 export const ProductsTable = connect(
-    (state, props) => ({
-        poructIds: filterProductIds(state, props.filterString),
-        sortOptions: state.products.sortOptions
-    }),
-    dispatch => ({
-        loadProducts: () => dispatch(getProducts()),
-        applyFilter: filter => dispatch(applyFilter(filter)),
-        applySorting: options => dispatch(applySorting(options)),
-        add: () => dispatch(showModalAction({
-            element: <AddOrEditModal />
-        }))
-    })
+    mapStateToProps,
+    mapDispatchToProps
 )(ProductsTableInternal);
