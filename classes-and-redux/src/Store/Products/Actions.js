@@ -1,11 +1,14 @@
 import { ProductsDataService } from "../../Services/ProductsData.service"
 
 import { productActionTypes } from "./ActionTypes"
+import { showSpinnerOverlayAction, hideSpinnerOverlayAction } from "../SpinnerOverlay";
 
 export const getProducts = () => {
     return async dispatch => {
+        dispatch(showSpinnerOverlayAction('Getting products...'));
         const products = await ProductsDataService.get();
         dispatch(getProductsAction(products));
+        dispatch(hideSpinnerOverlayAction());
     };
 };
 
@@ -18,8 +21,15 @@ export const addProduct = product => {
 
 export const editProduct = product => {
     return async dispatch => {
-        await ProductsDataService.addOrEdit(product);
-        dispatch(editProductAction(product));
+        dispatch(showSpinnerOverlayAction('Editing product...'));
+        try {
+            await ProductsDataService.addOrEdit(product);
+            dispatch(editProductAction(product));
+        } catch (e) {
+            throw e;
+        } finally {
+            dispatch(hideSpinnerOverlayAction());
+        }
     };
 };
 

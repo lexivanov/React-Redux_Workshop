@@ -27,6 +27,6 @@ const showModalAction = modalData => ({
     payload: modalData
 });
 
-const hideModalAction = () => ({
+export const hideModalAction = () => ({
     type: modalActionTypes.hide
 });

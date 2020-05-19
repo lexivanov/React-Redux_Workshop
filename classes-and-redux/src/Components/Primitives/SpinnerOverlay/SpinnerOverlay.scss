@@ -1,0 +1,28 @@
+.overlay-layout {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+
+  .global-overlay {
+    z-index: 1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    opacity: 0.5;
+  }
+
+  .overlay-text {
+    position: absolute;
+    z-index: 2;
+    color: #fff;
+    font-size: 16px;
+    text-transform: capitalize;
+  }
+}

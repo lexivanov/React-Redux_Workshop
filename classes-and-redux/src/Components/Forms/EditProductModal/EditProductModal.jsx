@@ -7,7 +7,7 @@ import { Input, Button } from '../../Primitives';
 import { ProductsDataService } from '../../../Services/ProductsData.service';
 
 import { addProduct, editProduct } from '../../../Store/Products';
-import { hideModalActionCreator } from '../../../Store/Modals';
+import { hideModalAction } from '../../../Store/Modals';
 import { emptyDelivery, emptyProduct, deliveryModes } from './Constants';
 
 import './EditProductModal.scss';
@@ -251,6 +251,6 @@ export const AddOrEditModal = connect(
     {
         addProduct,
         editProduct,
-        close: hideModalActionCreator,
+        close: () => dispatch => dispatch(hideModalAction()),
     }
 )(AddOrEditModalInternal);
