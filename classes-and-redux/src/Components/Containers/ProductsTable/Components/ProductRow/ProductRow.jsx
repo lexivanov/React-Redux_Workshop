@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useMemo, useCallback, useRef } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import { Button } from '../../../../Primitives';
@@ -8,42 +8,43 @@ import { dollarsPresenter } from '../../../../../Utils';
 
 import './ProductRow.scss';
 
-class ProductRowInternal extends Component {
-    static propTypes = {
-        id: PropTypes.string,
-        product: PropTypes.object
-    }
+export const ProductRowInternal = ({ id }) => {
+    const dispatch = useDispatch();
 
-    edit = () => this.props.edit(this.props.product);
+    const product = useSelector((state) => state.products.list[id]);
 
-    delete = () => this.props.delete(this.props.product);
+    const { name, price, count } = product;
 
-    render() {
-        const { name, price, count } = this.props.product;
-        return (
-            <div className='products-table-row'>
-                <div className='row-item column-name'>
-                    <span className='name'>{name}</span>
-                    <span className='count'>{count}</span>
-                </div>
-                <div className='row-item column-price'>
-                    <span className='price'>{dollarsPresenter(price)}</span>
-                </div>
-                <div className='row-item column-actions'>
-                    <Button className='action-button edit' onClick={this.edit}>Edit</Button>
-                    <Button className='action-button delete' onClick={this.delete}>Delete</Button>
-                </div>
+    const edit = useCallback(() => dispatch(showArrOrEditModal()), [dispatch]);
+
+    const remove = useCallback(() => {
+        actionsContainer.current.style.background = 'blue';
+        dispatch(showDeleteConfirmModal(product));
+    }, [dispatch, product]);
+
+    const actionsContainer = useRef(null);
+
+
+    const markup = useMemo(() =>
+        (<div className='products-table-row'>
+            <div className='row-item column-name'>
+                <span className='name'>{name}</span>
+                <span className='count'>{count}</span>
             </div>
-        );
-    }
+            <div className='row-item column-price'>
+                <span className='price'>{dollarsPresenter(price)}</span>
+            </div>
+            <div className='row-item column-actions' ref={actionsContainer}>
+                <Button className='action-button edit' onClick={edit}>Edit</Button>
+                <Button className='action-button delete' onClick={remove}>Delete</Button>
+            </div>
+        </div>), [count, edit, name, price, remove]);
+
+    return markup;
+
 }
 
-export const ProductRow = connect(
-    (state, props) => ({
-        product: state.products.list[props.id]
-    }),
-    {
-        edit: showArrOrEditModal,
-        delete: showDeleteConfirmModal
-    }
-)(ProductRowInternal);
+ProductRowInternal.propTypes = {
+    id: PropTypes.string,
+    product: PropTypes.object
+}
